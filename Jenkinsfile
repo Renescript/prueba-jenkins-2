@@ -19,11 +19,11 @@ pipeline {
                     try {
                         echo "⚙️ Instalando nvm y Node.js..."
 
-                        // Install nvm
+                        // Install nvm and Node.js
                         sh '''
                             curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
                             export NVM_DIR="$HOME/.nvm"
-                            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+                            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"   # Removed the escape character
                             nvm install ${NODE_VERSION}
                             nvm use ${NODE_VERSION}
                         '''
