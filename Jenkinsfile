@@ -8,10 +8,9 @@ pipeline {
         stage('Clonar Repositorio') {
             steps {
                 echo "** Clonando repositorio"
-               // git 'https://github.com/Renescript/Apoyo-Prueba---Implementacio-n-de-un-pipeline-de-integracio-n-continua.git'
+                // git 'https://github.com/Renescript/Apoyo-Prueba---Implementacio-n-de-un-pipeline-de-integracio-n-continua.git'
                 checkout scm
             }
-
         }
  
         stage('Dependencias') { 
@@ -19,6 +18,12 @@ pipeline {
                 script { 
                     try { 
                         echo "⚙️ Instalando dependencias..." 
+
+                        // Install Node.js using nvm and set the version
+                        sh 'nvm install 18.16'
+                        sh 'nvm use 18.16'
+
+                        // Now install dependencies with npm
                         sh 'npm install' 
                     } catch (Exception e) { 
                         error("❌ Error en la etapa de dependencias") 
