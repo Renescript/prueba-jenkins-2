@@ -12,25 +12,30 @@ pipeline {
                 checkout scm
             }
         }
- 
-        stage('Dependencias') { 
-            steps { 
-                script { 
-                    try { 
-                        echo "⚙️ Instalando dependencias..." 
 
-                        // Install Node.js using nvm and set the version
-                        sh 'nvm install 18.16'
-                        sh 'nvm use 18.16'
+        stage('Instalar nvm y Node.js') {
+            steps {
+                script {
+                    try {
+                        echo "⚙️ Instalando nvm y Node.js..."
+
+                        // Install nvm
+                        sh '''
+                            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+                            export NVM_DIR="$HOME/.nvm"
+                            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+                            nvm install ${NODE_VERSION}
+                            nvm use ${NODE_VERSION}
+                        '''
 
                         // Now install dependencies with npm
-                        sh 'npm install' 
+                        sh 'npm install'
                     } catch (Exception e) { 
-                        error("❌ Error en la etapa de dependencias") 
+                        error("❌ Error en la instalación de nvm y Node.js") 
                     } 
                 } 
-            } 
-        } 
+            }
+        }
  
         stage('Test') { 
             steps { 
