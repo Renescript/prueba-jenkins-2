@@ -1,5 +1,8 @@
 pipeline { 
-    agent any 
+    agent {
+        docker { image 'node:18' }
+    }
+
     environment { 
         NODE_VERSION = '18.16'
     } 
@@ -8,34 +11,24 @@ pipeline {
         stage('Clonar Repositorio') {
             steps {
                 echo "** Clonando repositorio"
-                // git 'https://github.com/Renescript/Apoyo-Prueba---Implementacio-n-de-un-pipeline-de-integracio-n-continua.git'
+               // git 'https://github.com/Renescript/Apoyo-Prueba---Implementacio-n-de-un-pipeline-de-integracio-n-continua.git'
                 checkout scm
             }
+
         }
-
-        stage('Instalar nvm y Node.js') {
-            steps {
-                script {
-                    try {
-                        echo "⚙️ Instalando nvm y Node.js..."
-
-                        // Install nvm and Node.js
-                        sh '''
-                            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
-                            export NVM_DIR="$HOME/.nvm"
-                            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"   # Removed the escape character
-                            nvm install ${NODE_VERSION}
-                            nvm use ${NODE_VERSION}
-                        '''
-
-                        // Now install dependencies with npm
-                        sh 'npm install'
+ 
+        stage('Dependencias') { 
+            steps { 
+                script { 
+                    try { 
+                        echo "⚙️ Instalando dependencias..." 
+                        sh 'npm install' 
                     } catch (Exception e) { 
-                        error("❌ Error en la instalación de nvm y Node.js") 
+                        error("❌ Error en la etapa de dependencias") 
                     } 
                 } 
-            }
-        }
+            } 
+        } 
  
         stage('Test') { 
             steps { 
